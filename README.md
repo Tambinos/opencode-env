@@ -50,7 +50,10 @@ Add your ssh key
 ```bash
 ssh-add ~/.ssh/any-private-key
 ```
-#### Enviornment
+#### Environment
 If you want your agent to be able to use GitHub client make sure to add a .env file
 ```
 SANDBOX_GH_TOKEN=any pat or fine grained token
+```
+### Functionality
+Secure Container where a Agent can't access anything it isn't supposed to, but still works with git and GitHub Client
