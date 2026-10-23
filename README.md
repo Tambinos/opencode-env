@@ -57,3 +57,5 @@ SANDBOX_GH_TOKEN=any pat or fine grained token
 ```
 ### Functionality
 Secure Container where a Agent can't access anything it isn't supposed to, but still works with git and GitHub Client
+You can clone this environment into any repository and it should work right away after creating the .env file.
+It has access to all files one layer below itself except files or directories mentioned inside the .gitignore of the underlying directory
