@@ -6,14 +6,30 @@ services:
     stdin_open: true
     tty: true
     working_dir: /workspace/opencode-env
-    entrypoint: ["./entrypoint.sh"]
+    entrypoint: ["/workspace/opencode-env/entrypoint.sh"]
     command: ["/bin/bash"]
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
+      # Mount parent workspace
       - ..:/workspace:rw
+
+      # MASK GIT HOOKS: Mounts an in-memory tmpfs over .git/hooks with read-only permissions.
+      - type: tmpfs
+        target: /workspace/.git/hooks
+        tmpfs:
+          mode: 0555
+
+      # Persistent sandbox runtime state
       - ./sandbox_data/config:/root/.config/opencode:rw
       - ./sandbox_data/share:/root/.local/share/opencode:rw
     environment:
-      - SSH_AUTH_SOCK=/tmp/ssh-agent.sock
       - GITHUB_TOKEN=${SANDBOX_GH_TOKEN}
+    networks:
+      - sandbox_net
+
+networks:
+  sandbox_net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.enable_icc: "false"
