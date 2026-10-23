@@ -5,12 +5,15 @@ services:
     container_name: opencode_env
     stdin_open: true
     tty: true
-    working_dir: /workspace
+    working_dir: /workspace/opencode-env
+    entrypoint: ["./entrypoint.sh"]
+    command: ["/bin/bash"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
-      - .:/workspace:rw
+      - ..:/workspace:rw
       - ./sandbox_data/config:/root/.config/opencode:rw
       - ./sandbox_data/share:/root/.local/share/opencode:rw
-      - ${SSH_AUTH_SOCK}:/tmp/ssh-agent.sock:ro
     environment:
       - SSH_AUTH_SOCK=/tmp/ssh-agent.sock
       - GITHUB_TOKEN=${SANDBOX_GH_TOKEN}
