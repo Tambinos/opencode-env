@@ -1,15 +1,16 @@
 services:
   opencode-dev:
     build: .
+    runtime: kata
     container_name: opencode_env
     stdin_open: true
     tty: true
     working_dir: /workspace
     volumes:
-      - ..:/workspace:rw
-      - ~/.config/opencode:/root/.config/opencode:rw
-      - ~/.local/share/opencode:/root/.local/share/opencode:rw
-      - ~/.config/gh:/root/.config/gh:rw
-      - ~/.ssh/id_ed25519:/root/.ssh/id_ed25519:ro
-      - ~/.ssh/id_ed25519.pub:/root/.ssh/id_ed25519.pub:ro
-      - ~/.ssh/known_hosts:/root/.ssh/known_hosts:ro
+      - .:/workspace:rw
+      - ./sandbox_data/config:/root/.config/opencode:rw
+      - ./sandbox_data/share:/root/.local/share/opencode:rw
+      - ${SSH_AUTH_SOCK}:/tmp/ssh-agent.sock:ro
+    environment:
+      - SSH_AUTH_SOCK=/tmp/ssh-agent.sock
+      - GITHUB_TOKEN=${SANDBOX_GH_TOKEN}
