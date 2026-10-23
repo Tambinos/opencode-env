@@ -3,28 +3,29 @@ services:
     build: .
     runtime: kata
     container_name: opencode_env
-    stdin_open: true
-    tty: true
     working_dir: /workspace/opencode-env
     entrypoint: ["/workspace/opencode-env/entrypoint.sh"]
-    command: ["/bin/bash"]
+    # Run the native OpenCode web server in the foreground
+    command: ["opencode", "serve", "--hostname", "0.0.0.0", "--port", "4096"]
+    
+    # SECURITY: Bind strictly to 127.0.0.1 so the web UI is NOT reachable across your corporate LAN
+    ports:
+      - "127.0.0.1:4096:4096"
+
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      # Mount parent workspace
       - ..:/workspace:rw
-
-      # MASK GIT HOOKS: Mounts an in-memory tmpfs over .git/hooks with read-only permissions.
       - type: tmpfs
         target: /workspace/.git/hooks
         tmpfs:
           mode: 0555
-
-      # Persistent sandbox runtime state
       - ./sandbox_data/config:/root/.config/opencode:rw
       - ./sandbox_data/share:/root/.local/share/opencode:rw
     environment:
       - GITHUB_TOKEN=${SANDBOX_GH_TOKEN}
+      # Optional: set a static web password if you don't want a randomized one on boot
+      - OPENCODE_SERVER_PASSWORD=${OPENCODE_SERVER_PASSWORD}
     networks:
       - sandbox_net
 
