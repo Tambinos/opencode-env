@@ -18,7 +18,7 @@ if [ -n "$GITHUB_TOKEN" ]; then
     git config --system --add url."https://x-access-token:${GITHUB_TOKEN}@github.com/".insteadOf "ssh://git@github.com/"
     echo "[entrypoint] Git rewrite configured successfully."
 else
-    echo "[entrypoint] ERROR: GITHUB_TOKEN is empty! Git rewrite was SKIPPED." >&2
+    echo "[entrypoint] GITHUB_TOKEN not set. Running in local-only mode; GitHub HTTPS rewrite skipped."
 fi
 
 # Execute the container's default command

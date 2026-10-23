@@ -23,7 +23,7 @@ services:
       - ./sandbox_data/config:/root/.config/opencode:rw
       - ./sandbox_data/share:/root/.local/share/opencode:rw
     environment:
-      - GITHUB_TOKEN=${SANDBOX_GH_TOKEN}
+      - GITHUB_TOKEN=${SANDBOX_GH_TOKEN:-}
       # Optional: set a static web password if you don't want a randomized one on boot
       - OPENCODE_SERVER_PASSWORD=${OPENCODE_SERVER_PASSWORD}
     networks:

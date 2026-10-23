@@ -1,0 +1,9 @@
+services:
+  opencode-dev:
+    environment:
+      # Local-only mode: ignore any SANDBOX_GH_TOKEN from .env and run without GitHub access.
+      - GITHUB_TOKEN=
+    volumes:
+      # The parent directory mount also exposes this .env file inside the container.
+      # Mask it so the token is not readable by the agent in local-only mode.
+      - ./.env.empty:/workspace/opencode-env/.env:ro

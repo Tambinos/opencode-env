@@ -118,12 +118,14 @@ cp .env.example .env
 
 ```
 
-Define your GitHub Personal Access Token (PAT):
+Optionally define your GitHub Personal Access Token (PAT) for GitHub access:
 
 ```env
 SANDBOX_GH_TOKEN=ghp_yourPersonalAccessTokenOrFineGrainedToken
 
 ```
+
+The token is **optional**. If it is omitted, the entrypoint logs that it is running in local-only mode and skips the GitHub HTTPS rewrite; the agent can still edit files in the mounted workspace.
 
 > **Note on SSH Sockets:** Do **not** bind-mount `${SSH_AUTH_SOCK}` into Kata Containers. Kata runs inside a virtual machine powered by `virtio-fs`, which cannot share host Unix domain sockets across the VM boundary (doing so causes `Input/output error (os error 5)`). Use `SANDBOX_GH_TOKEN` or mount dedicated private key files directly (`~/.ssh/id_ed25519`).
 
@@ -146,6 +148,19 @@ Alternatively, start it detached and attach to the container:
 ```bash
 docker compose up -d
 docker attach opencode_env
+
+```
+
+### Local-Only Mode (No GitHub Token)
+
+To run without a GitHub token or any GitHub access, layer the local override. It explicitly clears `GITHUB_TOKEN` even if `SANDBOX_GH_TOKEN` is set in `.env`, and masks the `.env` file inside the container with the secret-free `./.env.empty` placeholder (the `..:/workspace` mount would otherwise expose it):
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.local.yml up -d
+docker attach opencode_env
+
+# Or as a one-off interactive session
+docker compose -f docker-compose.yml -f docker-compose.local.yml run --rm opencode-dev
 
 ```
 
