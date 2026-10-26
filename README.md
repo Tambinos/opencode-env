@@ -164,6 +164,18 @@ docker compose -f docker-compose.yml -f docker-compose.local.yml run --rm openco
 
 ```
 
+### Bundled OpenCode Tooling
+
+The image ships three token-saving tools and installs them into the sandbox's global OpenCode config on startup:
+
+| Tool | What it does | Integration |
+| --- | --- | --- |
+| [Ponytail](https://github.com/DietrichGebert/ponytail) | Reuses existing code and writes the minimum that works | npm plugin (`.opencode` plugin) |
+| [Caveman](https://github.com/JuliusBrussee/caveman) | Terse replies plus compressed tool output | native OpenCode plugin, commands and skills |
+| [RTK](https://github.com/rtk-ai/rtk) | Compresses Bash command output before the agent reads it | global `plugins/rtk.ts` |
+
+`setup-opencode-tools.sh` runs from `entrypoint.sh` and is idempotent; the source versions are pinned in the `Dockerfile` (`CAVEMAN_VERSION`, `RTK_VERSION`, `PONYTAIL_VERSION`). After the first boot, restart OpenCode (or the container) so the plugins load. Use `/caveman`, `/ponytail`, and `rtk gain` to verify each one.
+
 ---
 
 ## Important Constraints & Gotchas

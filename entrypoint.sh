@@ -21,5 +21,12 @@ else
     echo "[entrypoint] GITHUB_TOKEN not set. Running in local-only mode; GitHub HTTPS rewrite skipped."
 fi
 
+# 5. Install/refresh OpenCode token-saving tools (ponytail, caveman, rtk)
+ENTRYPOINT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+if [ -x "$ENTRYPOINT_DIR/setup-opencode-tools.sh" ]; then
+    "$ENTRYPOINT_DIR/setup-opencode-tools.sh" || \
+        echo "[entrypoint] OpenCode tool setup failed; continuing without it." >&2
+fi
+
 # Execute the container's default command
 exec "$@"
