@@ -1,3 +1,7 @@
 .env
 sandbox_data/*
 !sandbox_data/.gitkeep
+!sandbox_data/config/
+sandbox_data/config/*
+!sandbox_data/config/opencode.jsonc
+!sandbox_data/config/AGENTS.md
